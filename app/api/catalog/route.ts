@@ -1,20 +1,26 @@
 import { NextResponse } from "next/server";
-import { products } from "../../../lib/catalog";
+import { products } from "@/lib/catalog";
 
-export const runtime = "edge";
-
-export async function GET() {
+export function GET() {
   return NextResponse.json({
-    brand: "Mercado Fútbol",
+    store: "Mercado Fútbol",
     currency: "USD",
     products: products.map((product) => ({
-      id: `MF-${product.id}`,
-      title: product.name,
-      brand: product.club,
-      category: product.league,
+      id: product.id,
+      slug: product.slug,
+      club: product.club,
+      name: product.name,
+      league: product.league,
       price: product.price,
-      availability: "in stock",
-      url: `https://mercadofutbol.shop/?product=${product.id}`,
+      compareAtPrice: product.compareAtPrice,
+      categories: product.categories,
+      sizes: product.sizes,
+      image: product.image,
+      description: product.description,
+      season: product.season,
+      featured: product.featured,
     })),
+  }, {
+    headers: { "Cache-Control": "public, max-age=300, s-maxage=3600" },
   });
 }

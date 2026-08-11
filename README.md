@@ -1,72 +1,103 @@
-# Mercado Fútbol
+# Mercado Fútbol v4
 
-Full-stack soccer jersey storefront for `mercadofutbol.shop`.
+A Vercel-ready soccer jersey storefront built with Next.js 16. The design uses the strong product photography, generous spacing, category navigation, and product-option patterns common to leading sports retailers while keeping Mercado Fútbol's own black, cream, green, and lime identity.
 
-## Included
+## Included now
 
-- Responsive jersey catalog with Fan and Player versions
-- Size, name, and number personalization
-- Server-calculated Stripe Checkout Sessions
-- Stripe webhook signature verification
-- Durable Cloudflare D1 order records
-- Customer **My Orders** lookup with status and tracking
-- Order-success page
-- WhatsApp Business Platform supplier notification hook
-- Meta Pixel and TikTok Pixel hooks
-- JSON product catalog endpoint at `/api/catalog`
-- Product-image folder at `public/products`
+- Home page, search, category pages, product pages, cart drawer, and full cart page
+- Club, national team, retro, kids, new-release, and sale categories
+- Fan and Player versions, sizes, quantities, custom name, and custom number
+- Server-validated Stripe Checkout with free shipping over $100
+- Stripe webhook that saves paid orders and triggers supplier fulfillment
+- Clerk customer accounts with a private order-history page
+- Neon Postgres order database and Drizzle migration
+- WhatsApp Business Platform supplier template integration
+- Meta and TikTok pixels plus catalog-feed endpoints
+- Shipping, returns, privacy, and terms pages
+- SEO metadata, sitemap, robots file, and per-product social images
+- Responsive desktop and mobile layout
+- One approved real jersey image plus polished placeholders for the remaining photos
 
-## Product photos
+## First: upload this folder to GitHub
 
-Add finished jersey photos to `public/products`. Use square JPG or WebP files at least 1200 × 1200 pixels and preferably under 1.5 MB. Then add the matching path to the product in `lib/catalog.ts`:
+If you downloaded the ZIP, unzip it. In the `aypacharrito/mercadofutbol` repository, remove the old project files and upload **the contents inside this folder** so `package.json` is at the repository root. Commit the upload to `main`.
 
-```ts
-image: "/products/inter-miami-away-2025.jpg"
+Do not upload `node_modules`, `.next`, or a real `.env` file.
+
+## Vercel setup (do this only after GitHub is updated)
+
+Import the GitHub repository into Vercel as a Next.js project. Set the following Environment Variables for Production, Preview, and Development:
+
+```text
+NEXT_PUBLIC_APP_URL=https://mercadofutbol.shop
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+CLERK_SECRET_KEY=
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL=/account
+NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL=/account
+DATABASE_URL=
+STRIPE_SECRET_KEY=
+STRIPE_WEBHOOK_SECRET=
+WHATSAPP_ACCESS_TOKEN=
+WHATSAPP_PHONE_NUMBER_ID=
+SUPPLIER_WHATSAPP_NUMBER=
+WHATSAPP_TEMPLATE_NAME=mercado_futbol_supplier_order
+NEXT_PUBLIC_META_PIXEL_ID=
+NEXT_PUBLIC_TIKTOK_PIXEL_ID=
 ```
 
-Until a product has an `image` value, the site displays its temporary jersey illustration.
+Use test keys first. Never put secret keys in variables beginning with `NEXT_PUBLIC_`.
 
-## Private configuration
+### Database
 
-Copy `.env.example` to a local `.env` for development. Store real values only in your hosting provider's secret/environment settings. Never paste real Stripe or WhatsApp credentials into GitHub.
-
-Required for checkout:
-
-- `STRIPE_RESTRICTED_KEY`
-- `STRIPE_WEBHOOK_SECRET`
-
-Required later for automatic supplier messages:
-
-- `WHATSAPP_ACCESS_TOKEN`
-- `WHATSAPP_PHONE_NUMBER_ID`
-- `SUPPLIER_WHATSAPP_NUMBER`
-- `WHATSAPP_TEMPLATE_NAME`
-
-Optional analytics:
-
-- `NEXT_PUBLIC_META_PIXEL_ID`
-- `NEXT_PUBLIC_TIKTOK_PIXEL_ID`
-
-Stripe's webhook endpoint is `/api/stripe-webhook`. Subscribe it to `checkout.session.completed`.
-
-## Local development
-
-Requirements: Node.js 22.13 or later.
+Create a Neon Postgres integration in Vercel Marketplace so `DATABASE_URL` is injected. Then run:
 
 ```bash
-npm ci
-npm run dev
+npm install
+npm run db:migrate
 ```
 
-Generate a D1 migration after database schema changes:
+### Stripe
+
+Add a Stripe webhook endpoint pointing to:
+
+```text
+https://mercadofutbol.shop/api/stripe-webhook
+```
+
+Subscribe it to `checkout.session.completed` and `checkout.session.async_payment_succeeded`, then copy its signing secret into `STRIPE_WEBHOOK_SECRET`.
+
+### WhatsApp supplier fulfillment
+
+The supplier may keep regular WhatsApp, but Mercado Fútbol must send through a Meta WhatsApp Business Platform number. Create an approved template named `mercado_futbol_supplier_order` with three body variables:
+
+```text
+New paid order: {{1}}
+Items: {{2}}
+Total: {{3}}
+```
+
+The webhook formats the items as version, size, number, and name—the same information shown in the supplied example.
+
+### Meta, Instagram, and TikTok shops
+
+After real product photos and accurate inventory are loaded, use these public feeds:
+
+```text
+https://mercadofutbol.shop/api/feeds/meta
+https://mercadofutbol.shop/api/feeds/tiktok
+```
+
+Facebook and Instagram share Meta Commerce Manager. TikTok Shop is configured separately. Account approval, domain verification, product eligibility, inventory accuracy, and permission to sell branded merchandise remain the store owner's responsibility.
+
+## Local checks
 
 ```bash
-npm run db:generate
+npm install
+npm test
+npm run lint
+npm run build
 ```
 
-## Important launch notes
-
-- Prices are verified on the server from `lib/catalog.ts`; the browser cannot choose its own price.
-- Stripe and WhatsApp secrets must remain server-side.
-- Stripe webhook signatures are verified before an order is marked paid.
-- Sales tax is not automatically enabled. Configure tax registrations before enabling automatic collection.
+Copy `.env.example` to `.env.local` only for local development and fill in test credentials.

@@ -1,18 +1,48 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import { ClerkProvider } from "@clerk/nextjs";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Analytics } from "@/components/analytics";
+import { AppShell } from "@/components/app-shell";
+import { SiteFooter } from "@/components/site-footer";
 import "./globals.css";
-import { SocialPixels } from "./social-pixels";
 
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+const geist = Geist({ subsets: ["latin"], variable: "--font-geist" });
+const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" });
+const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://mercadofutbol.shop";
 
 export const metadata: Metadata = {
-  title: "Mercado Fútbol | Jerseys de Clubes y Selecciones",
-  description: "Compra jerseys de fútbol, elige tu talla y personaliza con nombre y número.",
-  other: { "codex-preview": "development" },
-  icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
+  metadataBase: new URL(appUrl),
+  title: {
+    default: "Mercado Fútbol | Soccer Jerseys",
+    template: "%s | Mercado Fútbol",
+  },
+  description: "Shop Fan and Player soccer jerseys, retro kits, national teams, kids styles, and custom name-and-number options.",
+  openGraph: {
+    title: "Mercado Fútbol",
+    description: "Wear the beautiful game.",
+    url: appUrl,
+    siteName: "Mercado Fútbol",
+    type: "website",
+  },
+  twitter: { card: "summary_large_image" },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#0d1714",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="es"><body className={`${geistSans.variable} ${geistMono.variable}`}><SocialPixels />{children}</body></html>;
+  return (
+    <html lang="en">
+      <body className={`${geist.variable} ${geistMono.variable}`}>
+        <ClerkProvider>
+          <AppShell>{children}</AppShell>
+          <SiteFooter />
+        </ClerkProvider>
+        <Analytics />
+      </body>
+    </html>
+  );
 }

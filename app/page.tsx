@@ -1,17 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-
-type Product = {
-  id: number;
-  club: string;
-  name: string;
-  league: string;
-  price: number;
-  accent: string;
-  tone: string;
-  badge: string;
-};
+import { Product, products } from "../lib/catalog";
 
 type CartItem = Product & {
   cartId: string;
@@ -21,23 +11,16 @@ type CartItem = Product & {
   playerName: string;
 };
 
-const products: Product[] = [
-  { id: 1, club: "Inter Miami", name: "Miami Away 24/25", league: "MLS", price: 74.99, accent: "#f5a8c4", tone: "#171717", badge: "IM" },
-  { id: 2, club: "Real Madrid", name: "Madrid Home 25/26", league: "La Liga", price: 79.99, accent: "#d9c8ff", tone: "#f5f3ed", badge: "RM" },
-  { id: 3, club: "FC Barcelona", name: "Barcelona Home 25/26", league: "La Liga", price: 79.99, accent: "#e6be38", tone: "#143a77", badge: "FCB" },
-  { id: 4, club: "México", name: "México Home 2026", league: "Selecciones", price: 69.99, accent: "#e8d09d", tone: "#0b5b3d", badge: "MX" },
-  { id: 5, club: "Argentina", name: "Argentina Home 2026", league: "Selecciones", price: 69.99, accent: "#ffffff", tone: "#77bfe2", badge: "ARG" },
-  { id: 6, club: "Manchester City", name: "City Home 25/26", league: "Premier League", price: 74.99, accent: "#ffffff", tone: "#76bce3", badge: "MC" },
-];
-
 function JerseyArt({ product }: { product: Product }) {
   return (
     <div className="jersey-stage" style={{ "--jersey": product.tone, "--trim": product.accent } as React.CSSProperties}>
-      <div className="jersey">
-        <span className="jersey-badge">{product.badge}</span>
-        <span className="jersey-wordmark">MERCADO</span>
-      </div>
-      <span className="photo-note">Tu foto aquí</span>
+      {product.image ? <img className="product-photo" src={product.image} alt={`${product.club} ${product.name} jersey`} /> : <>
+        <div className="jersey">
+          <span className="jersey-badge">{product.badge}</span>
+          <span className="jersey-wordmark">MERCADO</span>
+        </div>
+        <span className="photo-note">Tu foto aquí</span>
+      </>}
     </div>
   );
 }
@@ -52,6 +35,15 @@ export default function Home() {
   const [size, setSize] = useState("M");
   const [playerName, setPlayerName] = useState("");
   const [number, setNumber] = useState("");
+  const [customerEmail, setCustomerEmail] = useState("");
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [checkoutError, setCheckoutError] = useState("");
+  const [accountOpen, setAccountOpen] = useState(false);
+  const [accountEmail, setAccountEmail] = useState("");
+  const [accountNumber, setAccountNumber] = useState("");
+  const [accountLoading, setAccountLoading] = useState(false);
+  const [orderResult, setOrderResult] = useState<null | { orderNumber: string; status: string; total: number; trackingNumber: string | null; items: Array<{ name: string; version: string; size: string; number: string; playerName: string }> }>(null);
+  const [accountError, setAccountError] = useState("");
 
   const filtered = useMemo(() => products.filter((p) => {
     const matchesFilter = filter === "Todos" || p.league === filter;
@@ -76,13 +68,34 @@ export default function Home() {
     setVersion("Fan"); setSize("M"); setPlayerName(""); setNumber("");
   }
 
-  function sendOrder() {
-    const lines = cart.map((item, i) => [
-      `${i + 1}. ${item.club} — ${item.name}`,
-      `${item.version.toLowerCase()} version; size: ${item.size}; Number: ${item.number || "none"}; name: ${item.playerName || "none"}`,
-    ].join("\n"));
-    const message = `NUEVO PEDIDO — MERCADO FÚTBOL\n\n${lines.join("\n\n")}\n\nTotal cliente: $${total.toFixed(2)} USD`;
-    window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
+  async function startCheckout() {
+    setCheckoutError("");
+    if (!/^\S+@\S+\.\S+$/.test(customerEmail)) { setCheckoutError("Enter a valid email for your receipt and order access."); return; }
+    setCheckoutLoading(true);
+    try {
+      const response = await fetch("/api/checkout", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({
+        email: customerEmail,
+        items: cart.map(({ id, version, size, number, playerName }) => ({ id, version, size, number, playerName })),
+      }) });
+      const data = await response.json() as { url?: string; error?: string };
+      if (!response.ok || !data.url) throw new Error(data.error ?? "Checkout could not be started.");
+      window.location.assign(data.url);
+    } catch (error) {
+      setCheckoutError(error instanceof Error ? error.message : "Checkout could not be started.");
+      setCheckoutLoading(false);
+    }
+  }
+
+  async function lookupOrder(event: React.FormEvent) {
+    event.preventDefault();
+    setAccountError(""); setOrderResult(null); setAccountLoading(true);
+    try {
+      const response = await fetch(`/api/orders?email=${encodeURIComponent(accountEmail)}&order=${encodeURIComponent(accountNumber)}`);
+      const data = await response.json() as typeof orderResult & { error?: string };
+      if (!response.ok || !data || !("orderNumber" in data)) throw new Error(data?.error ?? "Order not found.");
+      setOrderResult(data);
+    } catch (error) { setAccountError(error instanceof Error ? error.message : "Order not found."); }
+    finally { setAccountLoading(false); }
   }
 
   return (
@@ -97,6 +110,7 @@ export default function Home() {
           <span>⌕</span>
           <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Busca equipos, ligas o selecciones" aria-label="Buscar jerseys" />
         </label>
+        <button className="account-button" onClick={() => setAccountOpen(true)}>My Orders</button>
         <button className="cart-button" onClick={() => setCartOpen(true)} aria-label={`Carrito con ${cart.length} artículos`}>
           Bolsa <span>{cart.length}</span>
         </button>
@@ -173,8 +187,34 @@ export default function Home() {
         <aside className="drawer" role="dialog" aria-modal="true" aria-label="Bolsa de compras" onMouseDown={(e) => e.stopPropagation()}>
           <div className="drawer-head"><div><p className="eyebrow">TU PEDIDO</p><h2>Bolsa ({cart.length})</h2></div><button className="close" onClick={() => setCartOpen(false)}>×</button></div>
           <div className="cart-items">{cart.length === 0 ? <div className="empty-cart"><span>MF</span><h3>Tu bolsa está vacía</h3><p>Elige un jersey para comenzar.</p></div> : cart.map((item) => <article className="cart-item" key={item.cartId}><div className="mini-shirt" style={{ background: item.tone, borderColor: item.accent }}>{item.badge}</div><div><h3>{item.name}</h3><p>{item.version} · Talla {item.size}</p><p>{item.number || item.playerName ? `#${item.number || "—"} ${item.playerName || "Sin nombre"}` : "Sin personalización"}</p><strong>${(item.price + (item.version === "Player" ? 15 : 0)).toFixed(2)}</strong></div><button onClick={() => setCart((current) => current.filter((x) => x.cartId !== item.cartId))}>Quitar</button></article>)}</div>
-          {cart.length > 0 && <div className="checkout"><div><span>Total</span><strong>${total.toFixed(2)} USD</strong></div><button onClick={sendOrder}>Enviar pedido por WhatsApp <span>↗</span></button><p>Se abrirá WhatsApp con el pedido escrito en el formato de tu proveedora.</p></div>}
+          {cart.length > 0 && <div className="checkout"><div><span>Total</span><strong>${total.toFixed(2)} USD</strong></div>
+            <label className="checkout-email">Email for receipt and order access<input type="email" autoComplete="email" value={customerEmail} onChange={(e) => setCustomerEmail(e.target.value)} placeholder="you@example.com" /></label>
+            {checkoutError && <p className="form-error">{checkoutError}</p>}
+            <button onClick={startCheckout} disabled={checkoutLoading}>{checkoutLoading ? "Opening secure checkout…" : "Secure checkout"} <span>↗</span></button>
+            <p>Payment is completed securely with Stripe. Your order is sent to the supplier only after payment is confirmed.</p>
+          </div>}
         </aside>
+      </div>}
+
+      {accountOpen && <div className="overlay" onMouseDown={() => setAccountOpen(false)}>
+        <section className="account-modal" role="dialog" aria-modal="true" aria-label="My Orders" onMouseDown={(event) => event.stopPropagation()}>
+          <button className="close" onClick={() => setAccountOpen(false)} aria-label="Close">×</button>
+          <p className="eyebrow">CUSTOMER PORTAL</p><h2>My Orders</h2>
+          <p>Enter the email used at checkout and your Mercado Fútbol order number.</p>
+          <form onSubmit={lookupOrder} className="order-form">
+            <label>Email<input type="email" required value={accountEmail} onChange={(e) => setAccountEmail(e.target.value)} placeholder="you@example.com" /></label>
+            <label>Order number<input required value={accountNumber} onChange={(e) => setAccountNumber(e.target.value.toUpperCase())} placeholder="MF-12AB34CD" /></label>
+            <button className="add" disabled={accountLoading}>{accountLoading ? "Finding order…" : "View order"}</button>
+          </form>
+          {accountError && <p className="form-error">{accountError}</p>}
+          {orderResult && <article className="order-result">
+            <div><span>Order</span><strong>{orderResult.orderNumber}</strong></div>
+            <div><span>Status</span><strong className="status-pill">{orderResult.status.replaceAll("_", " ")}</strong></div>
+            <div><span>Total</span><strong>${orderResult.total.toFixed(2)} USD</strong></div>
+            <div><span>Tracking</span><strong>{orderResult.trackingNumber || "Not shipped yet"}</strong></div>
+            <ul>{orderResult.items.map((item, index) => <li key={`${item.name}-${index}`}><b>{item.name}</b><span>{item.version} · {item.size}{item.playerName || item.number ? ` · #${item.number || "—"} ${item.playerName}` : ""}</span></li>)}</ul>
+          </article>}
+        </section>
       </div>}
     </main>
   );

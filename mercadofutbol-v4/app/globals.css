@@ -395,3 +395,15 @@ img { max-width: 100%; }
   .footer-top { grid-template-columns: 1fr; }
   .footer-bottom { flex-direction: column; gap: 10px; }
 }
+
+
+/* Mercado Fútbol fireball identity */
+.brand-logo {
+  width: 50px;
+  height: 50px;
+  flex: 0 0 auto;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(206, 52, 18, .22));
+}
+.footer-brand .brand-logo { width: 58px; height: 58px; }
+

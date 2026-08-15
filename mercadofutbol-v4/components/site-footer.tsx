@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export function SiteFooter() {
@@ -5,7 +6,7 @@ export function SiteFooter() {
     <footer className="site-footer">
       <div className="footer-top">
         <div>
-          <Link className="brand footer-brand" href="/"><span className="brand-mark">MF</span><span>MERCADO <b>FÚTBOL</b></span></Link>
+          <Link className="brand footer-brand" href="/"><Image className="brand-logo" src="/brand/mercado-futbol-fireball.png" alt="" width={52} height={52} /><span>MERCADO <b>FÚTBOL</b></span></Link>
           <p>Jerseys for everyone who lives the match.</p>
         </div>
         <div><h3>Shop</h3><Link href="/category/new">New</Link><Link href="/category/clubs">Clubs</Link><Link href="/category/national-teams">National Teams</Link><Link href="/category/retro">Retro</Link></div>
@@ -16,3 +17,4 @@ export function SiteFooter() {
     </footer>
   );
 }
+

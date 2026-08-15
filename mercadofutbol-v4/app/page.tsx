@@ -1,9 +1,6 @@
 import Link from "next/link";
 import { HomeHero } from "@/components/home-hero";
-import { ProductCard } from "@/components/product-card";
-import { categoryDefinitions, products } from "@/lib/catalog";
-
-const featured = products.filter((product) => product.featured);
+import { collectionDefinitions } from "@/lib/collections";
 
 export default function HomePage() {
   return (
@@ -16,21 +13,20 @@ export default function HomePage() {
         <div><b>Secure payment</b><span>Protected by Stripe</span></div>
       </section>
 
-      <section className="category-rail section-shell">
-        <div className="section-title"><div><p className="eyebrow">SHOP YOUR WAY</p><h2>Find your colors.</h2></div></div>
+      <section className="category-rail section-shell" id="discover">
+        <div className="section-title">
+          <div><p className="eyebrow">DISCOVER</p><h2>Shop by competition.</h2></div>
+          <Link href="/collections/world-cup">Start with World Cup 2026 →</Link>
+        </div>
         <div className="category-cards">
-          {categoryDefinitions.map((category, index) => (
-            <Link className={`category-card category-${index + 1}`} href={`/category/${category.slug}`} key={category.slug}>
-              <span>0{index + 1}</span><h3>{category.label}</h3><b>Shop now →</b>
+          {collectionDefinitions.map((collection, index) => (
+            <Link className={`category-card category-${(index % 6) + 1}`} href={`/collections/${collection.slug}`} key={collection.slug}>
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <h3>{collection.label}</h3>
+              <p>{collection.description}</p>
+              <b>Browse collection →</b>
             </Link>
           ))}
-        </div>
-      </section>
-
-      <section className="section-shell product-section">
-        <div className="section-title"><div><p className="eyebrow">TRENDING NOW</p><h2>Fan favorites.</h2></div><Link href="/category/new">View all new releases →</Link></div>
-        <div className="product-grid">
-          {featured.map((product, index) => <ProductCard product={product} priority={index < 2} key={product.id} />)}
         </div>
       </section>
 
@@ -40,7 +36,7 @@ export default function HomePage() {
       </section>
 
       <section className="personalization-banner">
-        <div><p className="eyebrow">YOUR NAME. YOUR NUMBER.</p><h2>Make the shirt yours.</h2><p>Add a player name, your own name, and a number before checkout.</p><Link className="button-primary" href="/category/clubs">Start customizing</Link></div>
+        <div><p className="eyebrow">YOUR NAME. YOUR NUMBER.</p><h2>Make the shirt yours.</h2><p>Add a player name, your own name, and a number before checkout.</p><Link className="button-primary" href="/collections/world-cup">Shop World Cup 2026</Link></div>
         <div className="number-art"><span>10</span><b>MERCADO</b></div>
       </section>
     </main>

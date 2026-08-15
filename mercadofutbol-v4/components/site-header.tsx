@@ -1,6 +1,7 @@
 "use client";
 
 import { UserButton, useUser } from "@clerk/nextjs";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -19,7 +20,7 @@ export function SiteHeader() {
       <header className="site-header">
         <button className="mobile-menu" type="button" onClick={() => setMenuOpen((value) => !value)} aria-expanded={menuOpen} aria-label="Open navigation">☰</button>
         <Link className="brand" href="/">
-          <span className="brand-mark">MF</span>
+          <Image className="brand-logo" src="/brand/mercado-futbol-fireball.png" alt="" width={52} height={52} priority />
           <span>MERCADO <b>FÚTBOL</b></span>
         </Link>
         <form className="header-search" action="/search">
@@ -42,3 +43,4 @@ export function SiteHeader() {
     </>
   );
 }
+

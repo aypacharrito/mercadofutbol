@@ -1,15 +1,12 @@
-# Mercado Futbol product images
+# Product image folder
 
-Place finished jersey photos in this folder using simple lowercase filenames, for example:
+The approved Real Madrid green Fan/Player image is already connected to the first product.
 
-- `inter-miami-away-2025.jpg`
-- `real-madrid-home-2026.jpg`
-- `barcelona-home-2026.jpg`
+To add the rest of the real jersey photos later:
 
-Then add the public path to the matching product in `lib/catalog.ts`:
+1. Export each image as JPG, PNG, or WebP.
+2. Use a simple lowercase filename such as `inter-miami-away-2025.jpg`.
+3. Put it in this folder.
+4. Add `image: "/products/inter-miami-away-2025.jpg"` to that product in `lib/catalog.ts`.
 
-```ts
-image: "/products/inter-miami-away-2025.jpg"
-```
-
-Recommended image format: JPG or WebP, square canvas, at least 1200 x 1200 pixels, plain background, and under 1.5 MB per image.
+Until then, Mercado Fútbol intentionally shows clean color-based jersey artwork instead of broken images. Replace every placeholder with an accurate product photo before submitting the Meta or TikTok catalog feeds.

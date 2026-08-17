@@ -32,7 +32,7 @@ export default function HomePage() {
 
       <section className="version-story">
         <div className="version-fan"><span>01</span><p>EVERYDAY COMFORT</p><h2>Fan version.</h2><ul><li>Relaxed standard fit</li><li>Comfort-first construction</li><li>Best for everyday wear</li></ul></div>
-        <div className="version-player"><span>02</span><p>MATCH-INSPIRED</p><h2>Player version.</h2><ul><li>Athletic tapered fit</li><li>Performance-style details</li><li>+$15 per jersey</li></ul></div>
+        <div className="version-player"><span>02</span><p>MATCH-INSPIRED</p><h2>Player version.</h2><ul><li>Athletic tapered fit</li><li>Performance-style details</li><li>$55 per jersey</li></ul></div>
       </section>
 
       <section className="personalization-banner">

@@ -1,4 +1,4 @@
-import { products } from "@/lib/catalog";
+import { catalogProducts } from "@/lib/catalog";
 
 export const collectionDefinitions = [
   { slug: "world-cup", label: "World Cup 2026", shortLabel: "World Cup", league: "National Teams", description: "The biggest national teams headed to 2026." },
@@ -19,5 +19,5 @@ export function getCollection(slug: string) {
 
 export function productsForCollection(slug: string) {
   const collection = getCollection(slug);
-  return collection ? products.filter((product) => product.league === collection.league) : [];
+  return collection ? catalogProducts.filter((product) => product.league === collection.league) : [];
 }

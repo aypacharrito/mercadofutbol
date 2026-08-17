@@ -17,7 +17,7 @@ test("catalog includes a complete launch assortment", () => {
 
 test("jersey images are local assets", () => {
   assert.doesNotMatch(source, /photo\.yupoo\.com/);
-  assert.match(source, /\/products\/yupoo-b52e18393b\.webp/);
+  assert.match(source, /\/products-studio\/mexico-home-2026\.webp/);
 });
 
 test("Fan, Player, and Retro prices are correct", () => {
@@ -25,4 +25,10 @@ test("Fan, Player, and Retro prices are correct", () => {
   assert.match(source, /FAN_PRICE = 35/);
   assert.match(source, /PLAYER_PRICE = 55/);
   assert.match(source, /RETRO_PRICE = 45/);
+});
+
+test("club and country kit posts are grouped into selectable families", () => {
+  assert.match(source, /export const catalogProducts/);
+  assert.match(source, /getProductVariants/);
+  assert.match(source, /kit: \"Home\" \| \"Away\" \| \"Third\"/);
 });

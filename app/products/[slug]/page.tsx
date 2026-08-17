@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ProductCard } from "@/components/product-card";
 import { ProductPurchase } from "@/components/product-purchase";
-import { ProductVisual } from "@/components/product-visual";
-import { getProductBySlug, products } from "@/lib/catalog";
+import { getProductBySlug, getProductVariants, catalogProducts } from "@/lib/catalog";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -12,7 +11,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const product = getProductBySlug(slug);
   if (!product) return {};
   return {
-    title: `${product.club} ${product.name}`,
+    title: `${product.name} Jersey`,
     description: product.description,
     openGraph: { images: [`/products/${product.slug}/opengraph-image`] },
   };
@@ -22,14 +21,12 @@ export default async function ProductPage({ params }: Props) {
   const { slug } = await params;
   const product = getProductBySlug(slug);
   if (!product) notFound();
-  const related = products.filter((item) => item.id !== product.id && item.categories.some((category) => product.categories.includes(category))).slice(0, 4);
+  const variants = getProductVariants(product);
+  const related = catalogProducts.filter((item) => item.club !== product.club && item.categories.some((category) => product.categories.includes(category))).slice(0, 4);
 
   return (
     <main>
-      <section className="product-page">
-        <div className="product-gallery"><ProductVisual product={product} priority /></div>
-        <ProductPurchase product={product} />
-      </section>
+      <ProductPurchase product={product} variants={variants} />
       <section className="product-details section-shell">
         <div><span>01</span><h3>Fan or Player</h3><p>Choose a relaxed everyday version or a closer athletic cut.</p></div>
         <div><span>02</span><h3>Personalized</h3><p>Add an optional name and number directly from this page.</p></div>

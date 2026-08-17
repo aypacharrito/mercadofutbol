@@ -5,21 +5,29 @@ export function ProductVisual({
   product,
   priority = false,
   className = "",
+  version = "Fan",
+  showVersionLabel = false,
 }: {
   product: Product;
   priority?: boolean;
   className?: string;
+  version?: "Fan" | "Player";
+  showVersionLabel?: boolean;
 }) {
-  if (product.image) {
+  const selectedImage = version === "Player" ? (product.playerImage ?? product.image) : product.image;
+
+  if (selectedImage) {
     return (
-      <div className={`product-visual product-visual-photo ${className}`}>
+      <div className={`product-visual product-visual-photo product-visual-${version.toLowerCase()} ${className}`}>
         <Image
-          src={product.image}
-          alt={`${product.club} ${product.name} Fan and Player jerseys`}
+          key={`${selectedImage}-${version}`}
+          src={selectedImage}
+          alt={`${product.club} ${product.kit} ${version} jersey`}
           fill
           priority={priority}
           sizes="(max-width: 720px) 100vw, (max-width: 1100px) 50vw, 33vw"
         />
+        {showVersionLabel ? <span className="visual-version-label">{version} fit preview</span> : null}
       </div>
     );
   }

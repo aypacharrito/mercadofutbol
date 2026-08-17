@@ -5,66 +5,84 @@ import type { Product } from "@/lib/catalog";
 import { itemPriceCents } from "@/lib/catalog";
 import { trackCommerceEvent } from "@/lib/analytics";
 import { useCart } from "@/components/cart-provider";
+import { ProductVisual } from "@/components/product-visual";
 
-export function ProductPurchase({ product }: { product: Product }) {
+export function ProductPurchase({ product, variants }: { product: Product; variants: Product[] }) {
   const { addItem } = useCart();
+  const [selectedId, setSelectedId] = useState(product.id);
   const [version, setVersion] = useState<"Fan" | "Player">("Fan");
   const [size, setSize] = useState(product.sizes[0]);
   const [playerName, setPlayerName] = useState("");
   const [number, setNumber] = useState("");
   const [quantity, setQuantity] = useState(1);
-  const priceCents = useMemo(() => itemPriceCents(product, version), [product, version]);
+  const selectedProduct = variants.find((variant) => variant.id === selectedId) ?? product;
+  const priceCents = useMemo(() => itemPriceCents(selectedProduct, version), [selectedProduct, version]);
 
   useEffect(() => {
     trackCommerceEvent("ViewContent", {
-      value: product.price,
-      contentId: product.id,
-      contentName: product.name,
+      value: selectedProduct.price,
+      contentId: selectedProduct.id,
+      contentName: selectedProduct.name,
     });
-  }, [product.id, product.name, product.price]);
+  }, [selectedProduct.id, selectedProduct.name, selectedProduct.price]);
 
   function addToBag() {
     addItem({
-      productId: product.id,
-      slug: product.slug,
-      club: product.club,
-      name: product.name,
+      productId: selectedProduct.id,
+      slug: selectedProduct.slug,
+      club: selectedProduct.club,
+      name: selectedProduct.name,
       priceCents,
       version,
       size,
       number,
       playerName,
       quantity,
-      image: product.image,
-      tone: product.tone,
-      accent: product.accent,
-      badge: product.badge,
+      image: version === "Player" ? (selectedProduct.playerImage ?? selectedProduct.image) : selectedProduct.image,
+      tone: selectedProduct.tone,
+      accent: selectedProduct.accent,
+      badge: selectedProduct.badge,
     });
   }
 
   return (
-    <div className="purchase-panel">
+    <section className="product-page">
+      <div className="product-gallery">
+        <ProductVisual product={selectedProduct} version={version} showVersionLabel priority />
+        <div className="gallery-caption"><span>{selectedProduct.kit}</span><span>{version} version</span></div>
+      </div>
+      <div className="purchase-panel">
       <div className="purchase-heading">
-        <p>{product.league} · {product.season}</p>
-        <h1>{product.name}</h1>
-        <span>{product.club}</span>
+        <p>{selectedProduct.league} · {selectedProduct.season}</p>
+        <h1>{selectedProduct.club} Jerseys</h1>
+        <span>{selectedProduct.kit} · {version}</span>
         <div className="product-page-price">
           <strong>${(priceCents / 100).toFixed(2)}</strong>
-          {product.compareAtPrice ? <del>${product.compareAtPrice.toFixed(2)}</del> : null}
+          {selectedProduct.compareAtPrice ? <del>${selectedProduct.compareAtPrice.toFixed(2)}</del> : null}
         </div>
       </div>
-      <p className="product-description">{product.description}</p>
+      <p className="product-description">Select the kit and fit you want. The product photo updates as you choose.</p>
       <fieldset>
-        <legend>Version</legend>
+        <legend>Kit</legend>
+        <div className={`option-grid ${variants.length > 2 ? "three" : "two"}`}>
+          {variants.map((variant) => (
+            <button className={selectedProduct.id === variant.id ? "selected" : ""} type="button" onClick={() => setSelectedId(variant.id)} key={variant.id}>
+              <b>{variant.kit}</b><span>{variant.season}</span>
+            </button>
+          ))}
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Fit</legend>
         <div className="option-grid two">
-          <button className={version === "Fan" ? "selected" : ""} type="button" onClick={() => setVersion("Fan")}><b>Fan</b><span>Relaxed everyday fit</span></button>
+          <button className={version === "Fan" ? "selected" : ""} type="button" onClick={() => setVersion("Fan")}><b>Fan $35</b><span>Relaxed everyday fit</span></button>
           <button className={version === "Player" ? "selected" : ""} type="button" onClick={() => setVersion("Player")}><b>Player $55</b><span>Athletic match fit</span></button>
         </div>
       </fieldset>
       <fieldset>
         <legend>Size</legend>
         <div className="size-grid">
-          {product.sizes.map((productSize) => (
+          {selectedProduct.sizes.map((productSize) => (
             <button className={size === productSize ? "selected" : ""} type="button" onClick={() => setSize(productSize)} key={productSize}>{productSize}</button>
           ))}
         </div>
@@ -87,6 +105,7 @@ export function ProductPurchase({ product }: { product: Product }) {
       </label>
       <button className="add-to-bag" type="button" onClick={addToBag}>Add to bag — ${((priceCents * quantity) / 100).toFixed(2)}</button>
       <div className="purchase-benefits"><span>✓ Secure Stripe checkout</span><span>✓ Free U.S. shipping on $100+</span><span>✓ Order tracking in your account</span></div>
-    </div>
+      </div>
+    </section>
   );
 }

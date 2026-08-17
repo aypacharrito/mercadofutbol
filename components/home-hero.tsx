@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { products } from "@/lib/catalog";
+import { catalogProducts } from "@/lib/catalog";
 import { ProductVisual } from "@/components/product-visual";
 
 export function HomeHero() {
-  const heroProduct = products.find((product) => product.id === "mf-mexico-home-2026") ?? products.find((product) => product.featured && product.image) ?? products[0];
+  const heroProduct = catalogProducts.find((product) => product.id === "mf-mexico-home-2026") ?? catalogProducts.find((product) => product.featured && product.image) ?? catalogProducts[0];
   return (
     <section className="home-hero">
       <div className="hero-copy">
@@ -15,7 +15,7 @@ export function HomeHero() {
       <Link className="hero-product" href={`/products/${heroProduct.slug}`}>
         <span className="hero-sticker">FAN + PLAYER</span>
         <ProductVisual product={heroProduct} priority />
-        <div><span>{heroProduct.club}</span><strong>{heroProduct.name}</strong><b>${heroProduct.price.toFixed(2)}</b></div>
+        <div><span>{heroProduct.club}</span><strong>Home + Away</strong><b>Choose Fan or Player</b></div>
       </Link>
     </section>
   );

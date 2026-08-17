@@ -22,7 +22,9 @@ export type Product = {
   badge: string;
   tone: string;
   accent: string;
+  kit: "Home" | "Away" | "Third";
   image?: string;
+  playerImage?: string;
   description: string;
   season: string;
   featured?: boolean;
@@ -44,7 +46,7 @@ type Listing = Omit<Product, "id" | "slug" | "name" | "sizes" | "categories" | "
   featured?: boolean;
 };
 
-function listing({ id, club, kit, league, badge, tone, accent, image, kind, season, featured }: Listing): Product {
+function listing({ id, club, kit, league, badge, tone, accent, image, playerImage, kind, season, featured }: Listing): Product {
   const isNational = kind === "national";
   return {
     id: `mf-${id}`,
@@ -58,7 +60,9 @@ function listing({ id, club, kit, league, badge, tone, accent, image, kind, seas
     badge,
     tone,
     accent,
+    kit,
     image,
+    playerImage,
     description: `${club} ${kit.toLowerCase()} jersey in Fan and Player versions, with optional name and number personalization.`,
     season: season ?? (isNational ? "2026" : "2026/27"),
     featured,
@@ -67,12 +71,12 @@ function listing({ id, club, kit, league, badge, tone, accent, image, kind, seas
 
 export const products: Product[] = [
   // World Cup 2026 national teams
-  listing({ id: "mexico-home-2026", club: "Mexico", kit: "Home", league: "National Teams", badge: "MX", tone: "#07583a", accent: "#d8b976", image: "/products/yupoo-b52e18393b.webp", kind: "national", featured: true }),
-  listing({ id: "usa-home-2026", club: "USA", kit: "Home", league: "National Teams", badge: "USA", tone: "#f4f4f4", accent: "#1b3f8b", image: "/products/yupoo-5cd4de5e65.webp", kind: "national", featured: true }),
+  listing({ id: "mexico-home-2026", club: "Mexico", kit: "Home", league: "National Teams", badge: "MX", tone: "#07583a", accent: "#d8b976", image: "/products-studio/mexico-home-2026.webp", playerImage: "/products-studio/mexico-home-2026-player.webp", kind: "national", featured: true }),
+  listing({ id: "usa-home-2026", club: "USA", kit: "Home", league: "National Teams", badge: "USA", tone: "#f4f4f4", accent: "#1b3f8b", image: "/products-studio/usa-home-2026.webp", kind: "national", featured: true }),
   listing({ id: "usa-away-2026", club: "USA", kit: "Away", league: "National Teams", badge: "USA", tone: "#173c7c", accent: "#ef3340", image: "/products/yupoo-914c88bfc7.webp", kind: "national" }),
-  listing({ id: "argentina-home-2026", club: "Argentina", kit: "Home", league: "National Teams", badge: "ARG", tone: "#83c7e8", accent: "#ffffff", image: "/products/yupoo-6acae2ac54.webp", kind: "national", featured: true }),
+  listing({ id: "argentina-home-2026", club: "Argentina", kit: "Home", league: "National Teams", badge: "ARG", tone: "#83c7e8", accent: "#ffffff", image: "/products-studio/argentina-home-2026.webp", kind: "national", featured: true }),
   listing({ id: "argentina-away-2026", club: "Argentina", kit: "Away", league: "National Teams", badge: "ARG", tone: "#26365d", accent: "#83c7e8", image: "/products/yupoo-14a37a1fd9.webp", kind: "national" }),
-  listing({ id: "brazil-home-2026", club: "Brazil", kit: "Home", league: "National Teams", badge: "BRA", tone: "#f4d13f", accent: "#176a3a", image: "/products/yupoo-aef4d54f.webp", kind: "national", featured: true }),
+  listing({ id: "brazil-home-2026", club: "Brazil", kit: "Home", league: "National Teams", badge: "BRA", tone: "#f4d13f", accent: "#176a3a", image: "/products-studio/brazil-home-2026.webp", kind: "national", featured: true }),
   listing({ id: "brazil-away-2026", club: "Brazil", kit: "Away", league: "National Teams", badge: "BRA", tone: "#1151a3", accent: "#f4d13f", image: "/products/yupoo-5885dff7.webp", kind: "national" }),
   listing({ id: "spain-home-2026", club: "Spain", kit: "Home", league: "National Teams", badge: "ESP", tone: "#c8192e", accent: "#f3c546", image: "/products/yupoo-13cbc43514.webp", kind: "national" }),
   listing({ id: "spain-away-2026", club: "Spain", kit: "Away", league: "National Teams", badge: "ESP", tone: "#eef2ef", accent: "#c8192e", image: "/products/yupoo-bdb24d18a1.webp", kind: "national" }),
@@ -88,11 +92,11 @@ export const products: Product[] = [
   listing({ id: "netherlands-away-2026", club: "Netherlands", kit: "Away", league: "National Teams", badge: "NED", tone: "#173a78", accent: "#ef7622", image: "/products/yupoo-947e0f22.webp", kind: "national" }),
 
   // Main 2026/27 club releases
-  listing({ id: "real-madrid-home-2027", club: "Real Madrid", kit: "Home", league: "La Liga", badge: "RM", tone: "#f5f2e9", accent: "#c8b078", image: "/products/yupoo-cc45530b.webp", kind: "club", featured: true }),
-  listing({ id: "real-madrid-away-2027", club: "Real Madrid", kit: "Away", league: "La Liga", badge: "RM", tone: "#202f50", accent: "#d6bd78", image: "/products/yupoo-0b0a451686.webp", kind: "club" }),
-  listing({ id: "barcelona-home-2027", club: "FC Barcelona", kit: "Home", league: "La Liga", badge: "FCB", tone: "#173a78", accent: "#9d173d", image: "/products/yupoo-b77442be.webp", kind: "club", featured: true }),
+  listing({ id: "real-madrid-home-2027", club: "Real Madrid", kit: "Home", league: "La Liga", badge: "RM", tone: "#f5f2e9", accent: "#c8b078", image: "/products-studio/real-madrid-home-2027.webp", playerImage: "/products-studio/real-madrid-home-2027-player.webp", kind: "club", featured: true }),
+  listing({ id: "real-madrid-away-2027", club: "Real Madrid", kit: "Away", league: "La Liga", badge: "RM", tone: "#202f50", accent: "#d6bd78", image: "/products-studio/real-madrid-away-2027.webp", playerImage: "/products-studio/real-madrid-away-2027-player.webp", kind: "club" }),
+  listing({ id: "barcelona-home-2027", club: "FC Barcelona", kit: "Home", league: "La Liga", badge: "FCB", tone: "#173a78", accent: "#9d173d", image: "/products-studio/barcelona-home-2027.webp", kind: "club", featured: true }),
   listing({ id: "barcelona-away-2027", club: "FC Barcelona", kit: "Away", league: "La Liga", badge: "FCB", tone: "#f0e7cf", accent: "#173a78", image: "/products/yupoo-effe3eb610.webp", kind: "club" }),
-  listing({ id: "arsenal-home-2027", club: "Arsenal", kit: "Home", league: "Premier League", badge: "AFC", tone: "#d71920", accent: "#ffffff", image: "/products/yupoo-e1fdb786.webp", kind: "club", featured: true }),
+  listing({ id: "arsenal-home-2027", club: "Arsenal", kit: "Home", league: "Premier League", badge: "AFC", tone: "#d71920", accent: "#ffffff", image: "/products-studio/arsenal-home-2027.webp", kind: "club", featured: true }),
   listing({ id: "arsenal-away-2027", club: "Arsenal", kit: "Away", league: "Premier League", badge: "AFC", tone: "#202624", accent: "#ef3f4b", image: "/products/yupoo-e2567ce864.webp", kind: "club" }),
   listing({ id: "manchester-city-home-2027", club: "Manchester City", kit: "Home", league: "Premier League", badge: "MC", tone: "#76bce3", accent: "#ffffff", image: "/products/yupoo-b6c31fe9.webp", kind: "club" }),
   listing({ id: "manchester-city-away-2027", club: "Manchester City", kit: "Away", league: "Premier League", badge: "MC", tone: "#151515", accent: "#76bce3", image: "/products/yupoo-56ebe9aa2b.webp", kind: "club" }),
@@ -110,9 +114,9 @@ export const products: Product[] = [
   listing({ id: "ac-milan-away-2027", club: "AC Milan", kit: "Away", league: "Serie A", badge: "ACM", tone: "#efefe9", accent: "#b3132b", image: "/products/yupoo-bd47a78254.webp", kind: "club" }),
   listing({ id: "inter-milan-home-2027", club: "Inter Milan", kit: "Home", league: "Serie A", badge: "INT", tone: "#1f4c9c", accent: "#111111", image: "/products/yupoo-2437ab8bfc.webp", kind: "club" }),
   listing({ id: "inter-milan-away-2027", club: "Inter Milan", kit: "Away", league: "Serie A", badge: "INT", tone: "#f3f3ef", accent: "#1f4c9c", image: "/products/yupoo-9a5b81916f.webp", kind: "club" }),
-  listing({ id: "club-america-home-2027", club: "Club América", kit: "Home", league: "Liga MX", badge: "AME", tone: "#f2df4a", accent: "#1f3b78", image: "/products/yupoo-8c63587780.webp", kind: "club", featured: true }),
+  listing({ id: "club-america-home-2027", club: "Club América", kit: "Home", league: "Liga MX", badge: "AME", tone: "#f2df4a", accent: "#1f3b78", image: "/products-studio/club-america-home-2027.webp", kind: "club", featured: true }),
   listing({ id: "club-america-away-2027", club: "Club América", kit: "Away", league: "Liga MX", badge: "AME", tone: "#1f3b78", accent: "#f2df4a", image: "/products/yupoo-cc0005bf83.webp", kind: "club" }),
-  listing({ id: "chivas-home-2027", club: "Chivas", kit: "Home", league: "Liga MX", badge: "CHI", tone: "#d2212b", accent: "#ffffff", image: "/products/yupoo-8f102c7a2d.webp", kind: "club", featured: true }),
+  listing({ id: "chivas-home-2027", club: "Chivas", kit: "Home", league: "Liga MX", badge: "CHI", tone: "#d2212b", accent: "#ffffff", image: "/products-studio/chivas-home-2027.webp", kind: "club", featured: true }),
   listing({ id: "chivas-away-2027", club: "Chivas", kit: "Away", league: "Liga MX", badge: "CHI", tone: "#193868", accent: "#d2212b", image: "/products/yupoo-81d299021d.webp", kind: "club" }),
   listing({ id: "inter-miami-away-2027", club: "Inter Miami", kit: "Away", league: "MLS", badge: "MIA", tone: "#161616", accent: "#f4a9c5", image: "/products/yupoo-270751ad77.webp", kind: "club" }),
   listing({ id: "la-galaxy-home-2027", club: "LA Galaxy", kit: "Home", league: "MLS", badge: "LAG", tone: "#f4f4ef", accent: "#1e4b91", image: "/products/yupoo-9df382bf.webp", kind: "club" }),
@@ -120,6 +124,23 @@ export const products: Product[] = [
 ];
 
 export const productMap = new Map(products.map((product) => [product.id, product]));
+
+const kitOrder = { Home: 0, Away: 1, Third: 2 } as const;
+
+export function productFamilyKey(product: Product) {
+  return `${product.club}::${product.season}`;
+}
+
+export function getProductVariants(product: Product) {
+  const family = productFamilyKey(product);
+  return products
+    .filter((item) => productFamilyKey(item) === family)
+    .sort((a, b) => kitOrder[a.kit] - kitOrder[b.kit]);
+}
+
+export const catalogProducts = products.filter((product, index) => (
+  products.findIndex((item) => productFamilyKey(item) === productFamilyKey(product)) === index
+));
 
 export function getProductById(id: string) {
   return productMap.get(id);
@@ -134,7 +155,7 @@ export function getCategory(slug: string) {
 }
 
 export function productsForCategory(slug: CategorySlug) {
-  return products.filter((product) => product.categories.includes(slug));
+  return catalogProducts.filter((product) => product.categories.includes(slug));
 }
 
 export function itemPriceCents(product: Product, version: "Fan" | "Player") {

@@ -1,13 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
-import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@/components/analytics";
 import { AppShell } from "@/components/app-shell";
 import { SiteFooter } from "@/components/site-footer";
 import "./globals.css";
 
-const geist = Geist({ subsets: ["latin"], variable: "--font-geist" });
-const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" });
 const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://mercadofutbol.shop";
 
 export const metadata: Metadata = {
@@ -36,7 +33,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className={`${geist.variable} ${geistMono.variable}`}>
+      <body>
         <ClerkProvider>
           <AppShell>{children}</AppShell>
           <SiteFooter />

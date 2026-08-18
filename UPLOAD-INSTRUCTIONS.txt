@@ -1,0 +1,8 @@
+MERCADO FUTBOL UPDATE
+
+1. Open this extracted folder.
+2. Upload everything INSIDE it to the ROOT of the GitHub repository.
+3. Allow GitHub to replace files with the same names.
+4. Commit the upload. Vercel will deploy automatically.
+
+Do not upload the ZIP itself and do not place this folder inside mercadofutbol-v4.

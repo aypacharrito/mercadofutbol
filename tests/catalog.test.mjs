@@ -12,7 +12,7 @@ test("catalog contains every customer-facing department", () => {
 
 test("catalog includes a complete launch assortment", () => {
   const productIds = source.match(/listing\(\{ id:/g) ?? [];
-  assert.equal(productIds.length, 48);
+  assert.equal(productIds.length, 53);
 });
 
 test("jersey images are local assets", () => {
@@ -31,4 +31,12 @@ test("club and country kit posts are grouped into selectable families", () => {
   assert.match(source, /export const catalogProducts/);
   assert.match(source, /getProductVariants/);
   assert.match(source, /kit: \"Home\" \| \"Away\" \| \"Third\"/);
+});
+
+test("featured teams expose both Home and Away choices", () => {
+  for (const team of ["Mexico", "Chelsea", "Inter Miami", "LA Galaxy", "LAFC"]) {
+    const escaped = team.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    assert.match(source, new RegExp(`club: "${escaped}", kit: "Home"`));
+    assert.match(source, new RegExp(`club: "${escaped}", kit: "Away"`));
+  }
 });

@@ -48,8 +48,26 @@ export function ProductPurchase({ product, variants }: { product: Product; varia
   return (
     <section className="product-page">
       <div className="product-gallery">
-        <ProductVisual product={selectedProduct} version={version} showVersionLabel priority />
-        <div className="gallery-caption"><span>{selectedProduct.kit}</span><span>{version} version</span></div>
+        <div className="product-gallery-layout">
+          <div className="product-gallery-thumbs" aria-label="Jersey styles">
+            {variants.map((variant) => (
+              <button
+                type="button"
+                className={selectedProduct.id === variant.id ? "selected" : ""}
+                aria-pressed={selectedProduct.id === variant.id}
+                onClick={() => setSelectedId(variant.id)}
+                key={variant.id}
+              >
+                <ProductVisual product={variant} version={version} />
+                <span>{variant.kit}</span>
+              </button>
+            ))}
+          </div>
+          <div className="product-gallery-main">
+            <ProductVisual product={selectedProduct} version={version} showVersionLabel priority />
+            <div className="gallery-caption"><span>{selectedProduct.kit}</span><span>{version} version</span></div>
+          </div>
+        </div>
       </div>
       <div className="purchase-panel">
       <div className="purchase-heading">
@@ -105,6 +123,20 @@ export function ProductPurchase({ product, variants }: { product: Product; varia
       </label>
       <button className="add-to-bag" type="button" onClick={addToBag}>Add to bag — ${((priceCents * quantity) / 100).toFixed(2)}</button>
       <div className="purchase-benefits"><span>✓ Secure Stripe checkout</span><span>✓ Free U.S. shipping on $100+</span><span>✓ Order tracking in your account</span></div>
+      <div className="product-accordions">
+        <details open>
+          <summary>Fan vs. Player</summary>
+          <p><b>Fan</b> has a relaxed everyday fit. <b>Player</b> is slimmer with a performance-style cut.</p>
+        </details>
+        <details>
+          <summary>Shipping & delivery</summary>
+          <p>Orders include tracking. Personalized jerseys may require additional processing time.</p>
+        </details>
+        <details>
+          <summary>Jersey care</summary>
+          <p>Wash cold, inside out, and air dry. Avoid bleach, fabric softener, and high heat.</p>
+        </details>
+      </div>
       </div>
     </section>
   );

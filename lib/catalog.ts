@@ -72,6 +72,7 @@ function listing({ id, club, kit, league, badge, tone, accent, image, playerImag
 export const products: Product[] = [
   // World Cup 2026 national teams
   listing({ id: "mexico-home-2026", club: "Mexico", kit: "Home", league: "National Teams", badge: "MX", tone: "#07583a", accent: "#d8b976", image: "/products-studio/mexico-home-2026.webp", playerImage: "/products-studio/mexico-home-2026-player.webp", kind: "national", featured: true }),
+  listing({ id: "mexico-away-2026", club: "Mexico", kit: "Away", league: "National Teams", badge: "MX", tone: "#f3f3ef", accent: "#0b5b3f", image: "/products-studio/mexico-away-2026.webp", kind: "national" }),
   listing({ id: "usa-home-2026", club: "USA", kit: "Home", league: "National Teams", badge: "USA", tone: "#f4f4f4", accent: "#1b3f8b", image: "/products-studio/usa-home-2026.webp", kind: "national", featured: true }),
   listing({ id: "usa-away-2026", club: "USA", kit: "Away", league: "National Teams", badge: "USA", tone: "#173c7c", accent: "#ef3340", image: "/products/yupoo-914c88bfc7.webp", kind: "national" }),
   listing({ id: "argentina-home-2026", club: "Argentina", kit: "Home", league: "National Teams", badge: "ARG", tone: "#83c7e8", accent: "#ffffff", image: "/products-studio/argentina-home-2026.webp", kind: "national", featured: true }),
@@ -103,6 +104,7 @@ export const products: Product[] = [
   listing({ id: "manchester-united-home-2027", club: "Manchester United", kit: "Home", league: "Premier League", badge: "MU", tone: "#c70101", accent: "#ffffff", image: "/products/yupoo-aaa63632.webp", kind: "club" }),
   listing({ id: "manchester-united-away-2027", club: "Manchester United", kit: "Away", league: "Premier League", badge: "MU", tone: "#f0f0ec", accent: "#c70101", image: "/products/yupoo-f304ebe1.webp", kind: "club" }),
   listing({ id: "chelsea-home-2027", club: "Chelsea", kit: "Home", league: "Premier League", badge: "CFC", tone: "#034694", accent: "#ffffff", image: "/products/yupoo-595eeb8988.webp", kind: "club" }),
+  listing({ id: "chelsea-away-2027", club: "Chelsea", kit: "Away", league: "Premier League", badge: "CFC", tone: "#111111", accent: "#d8b24c", image: "/products-studio/chelsea-away-2027.webp", playerImage: "/products-studio/chelsea-away-2027-player.webp", kind: "club" }),
   listing({ id: "chelsea-third-2027", club: "Chelsea", kit: "Third", league: "Premier League", badge: "CFC", tone: "#1d1d1d", accent: "#034694", image: "/products/yupoo-c8d7219715.webp", kind: "club" }),
   listing({ id: "psg-home-2027", club: "Paris Saint-Germain", kit: "Home", league: "Ligue 1", badge: "PSG", tone: "#15244b", accent: "#d71920", image: "/products/yupoo-0b2bcf27a0.webp", kind: "club" }),
   listing({ id: "psg-away-2027", club: "Paris Saint-Germain", kit: "Away", league: "Ligue 1", badge: "PSG", tone: "#f1f1ee", accent: "#15244b", image: "/products/yupoo-9ff89360bc.webp", kind: "club" }),
@@ -118,9 +120,12 @@ export const products: Product[] = [
   listing({ id: "club-america-away-2027", club: "Club América", kit: "Away", league: "Liga MX", badge: "AME", tone: "#1f3b78", accent: "#f2df4a", image: "/products/yupoo-cc0005bf83.webp", kind: "club" }),
   listing({ id: "chivas-home-2027", club: "Chivas", kit: "Home", league: "Liga MX", badge: "CHI", tone: "#d2212b", accent: "#ffffff", image: "/products-studio/chivas-home-2027.webp", kind: "club", featured: true }),
   listing({ id: "chivas-away-2027", club: "Chivas", kit: "Away", league: "Liga MX", badge: "CHI", tone: "#193868", accent: "#d2212b", image: "/products/yupoo-81d299021d.webp", kind: "club" }),
+  listing({ id: "inter-miami-home-2027", club: "Inter Miami", kit: "Home", league: "MLS", badge: "MIA", tone: "#f5a9c4", accent: "#111111", image: "/products-studio/inter-miami-home-2027.webp", kind: "club" }),
   listing({ id: "inter-miami-away-2027", club: "Inter Miami", kit: "Away", league: "MLS", badge: "MIA", tone: "#161616", accent: "#f4a9c5", image: "/products/yupoo-270751ad77.webp", kind: "club" }),
   listing({ id: "la-galaxy-home-2027", club: "LA Galaxy", kit: "Home", league: "MLS", badge: "LAG", tone: "#f4f4ef", accent: "#1e4b91", image: "/products/yupoo-9df382bf.webp", kind: "club" }),
+  listing({ id: "la-galaxy-away-2027", club: "LA Galaxy", kit: "Away", league: "MLS", badge: "LAG", tone: "#41206d", accent: "#f4b246", image: "/products-studio/la-galaxy-away-2027.webp", kind: "club" }),
   listing({ id: "lafc-home-2027", club: "LAFC", kit: "Home", league: "MLS", badge: "LAFC", tone: "#151515", accent: "#c8a95c", image: "/products/yupoo-9e271046.webp", kind: "club" }),
+  listing({ id: "lafc-away-2027", club: "LAFC", kit: "Away", league: "MLS", badge: "LAFC", tone: "#f4f1e8", accent: "#c8a95c", image: "/products-studio/lafc-away-2027.webp", kind: "club" }),
 ];
 
 export const productMap = new Map(products.map((product) => [product.id, product]));

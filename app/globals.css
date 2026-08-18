@@ -10,6 +10,8 @@
   --line: #d9ddd8;
   --muted: #69736f;
   --danger: #ad2424;
+  --font-geist: "Helvetica Neue", Arial, sans-serif;
+  --font-geist-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 }
 
 * { box-sizing: border-box; }
@@ -148,10 +150,11 @@ img { max-width: 100%; }
 .product-tag { position: absolute; z-index: 3; top: 12px; left: 12px; background: var(--lime); padding: 7px 9px; font-size: 9px; letter-spacing: .14em; font-weight: 900; }
 .product-visual { position: relative; min-height: 365px; display: grid; place-items: center; overflow: hidden; background: #f2f3f0; }
 .product-visual-photo img { object-fit: contain; padding: 20px; transition: transform .3s ease; }
-.product-visual-player img { transform: scale(1.07); }
+.product-visual-player { background: #e8ece8; }
+.product-visual-player img { transform: scale(1.13) translateY(1.5%); }
 .visual-version-label { position: absolute; z-index: 2; right: 12px; bottom: 12px; padding: 7px 9px; background: rgba(14, 30, 25, .86); color: white; font-size: 8px; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; }
 .product-card:hover .product-visual-photo img { transform: scale(1.03); }
-.product-card:hover .product-visual-player img { transform: scale(1.09); }
+.product-card:hover .product-visual-player img { transform: scale(1.16) translateY(1.5%); }
 .product-visual-mock:before { content: ""; position: absolute; width: 230px; height: 230px; border: 1px solid #d9ddd8; border-radius: 50%; }
 .kit { position: relative; z-index: 2; width: 190px; height: 230px; background: var(--kit); border-top: 9px solid var(--trim); clip-path: polygon(23% 0,37% 7%,63% 7%,77% 0,100% 17%,85% 41%,76% 35%,76% 100%,24% 100%,24% 35%,15% 41%,0 17%); filter: drop-shadow(0 22px 13px rgba(15,30,25,.2)); transition: transform .3s ease; }
 .product-card:hover .kit { transform: translateY(-6px) rotate(-2deg); }
@@ -199,9 +202,17 @@ img { max-width: 100%; }
 /* Product page */
 .product-page { display: grid; grid-template-columns: minmax(0, 58%) minmax(370px, 42%); min-height: 720px; }
 .product-gallery { min-width: 0; background: #f2f3f0; padding: 30px; }
+.product-gallery-layout { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 16px; }
+.product-gallery-main { min-width: 0; }
+.product-gallery-thumbs { display: flex; flex-direction: column; gap: 10px; }
+.product-gallery-thumbs button { position: relative; border: 1px solid transparent; background: #e8ebe7; padding: 0; overflow: hidden; }
+.product-gallery-thumbs button.selected { border-color: var(--ink); background: white; }
+.product-gallery-thumbs .product-visual { min-height: 108px; background: transparent; pointer-events: none; }
+.product-gallery-thumbs .product-visual-photo img { padding: 7px; }
+.product-gallery-thumbs button > span { position: absolute; z-index: 3; left: 6px; bottom: 6px; padding: 4px 6px; background: rgba(13,23,20,.88); color: white; font-size: 7px; font-weight: 850; letter-spacing: .1em; text-transform: uppercase; }
 .gallery-caption { display: flex; justify-content: space-between; padding: 12px 4px 0; color: var(--muted); font-size: 9px; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; }
-.product-gallery .product-visual { min-height: 720px; background: transparent; }
-.product-gallery .product-visual-photo img { padding: 35px; }
+.product-gallery-main > .product-visual { min-height: 720px; background: transparent; }
+.product-gallery-main > .product-visual-photo img { padding: 35px; }
 .purchase-panel { padding: 62px 6vw 62px 48px; }
 .purchase-heading > p { margin: 0 0 12px; color: var(--muted); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; }
 .purchase-heading h1 { margin: 0; font-size: clamp(42px, 5vw, 72px); line-height: .94; letter-spacing: -.06em; }
@@ -230,6 +241,13 @@ img { max-width: 100%; }
 .add-to-bag { width: 100%; min-height: 56px; border: 0; background: var(--green); color: white; font-weight: 850; margin-top: 20px; }
 .add-to-bag:hover { background: var(--green-dark); }
 .purchase-benefits { display: grid; gap: 8px; margin-top: 22px; color: var(--muted); font-size: 11px; }
+.product-accordions { margin-top: 34px; border-top: 1px solid var(--line); }
+.product-accordions details { border-bottom: 1px solid var(--line); }
+.product-accordions summary { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; list-style: none; cursor: pointer; font-size: 11px; font-weight: 850; letter-spacing: .08em; text-transform: uppercase; }
+.product-accordions summary::-webkit-details-marker { display: none; }
+.product-accordions summary:after { content: "+"; font-size: 18px; font-weight: 500; }
+.product-accordions details[open] summary:after { content: "−"; }
+.product-accordions p { margin: -4px 0 18px; color: var(--muted); font-size: 12px; line-height: 1.6; }
 .product-details { display: grid; grid-template-columns: repeat(3, 1fr); padding-block: 54px; border-bottom: 1px solid var(--line); }
 .product-details div { padding: 0 36px; border-right: 1px solid var(--line); }
 .product-details div:last-child { border: 0; }
@@ -341,7 +359,7 @@ img { max-width: 100%; }
   .hero-copy { min-height: 540px; padding: 70px 7vw; }
   .hero-product { min-height: 590px; }
   .product-page { grid-template-columns: 1fr; }
-  .product-gallery .product-visual { min-height: 620px; }
+  .product-gallery-main > .product-visual { min-height: 620px; }
   .purchase-panel { padding: 55px 8vw; }
 }
 
@@ -391,7 +409,11 @@ img { max-width: 100%; }
   .version-story > div { min-height: 420px; padding: 50px 25px; }
   .personalization-banner > div:first-child { padding: 60px 24px; }
   .product-gallery { padding: 10px; }
-  .product-gallery .product-visual { min-height: 450px; }
+  .product-gallery-layout { grid-template-columns: 1fr; }
+  .product-gallery-thumbs { order: 2; flex-direction: row; overflow-x: auto; padding-bottom: 4px; }
+  .product-gallery-thumbs button { flex: 0 0 82px; }
+  .product-gallery-thumbs .product-visual { min-height: 92px; }
+  .product-gallery-main > .product-visual { min-height: 450px; }
   .purchase-panel { padding: 42px 20px 55px; }
   .option-grid.two, .option-grid.three, .personalization-grid { grid-template-columns: 1fr; }
   .listing-hero { padding: 60px 20px 42px; }

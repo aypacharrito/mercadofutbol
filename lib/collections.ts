@@ -9,6 +9,7 @@ export const collectionDefinitions = [
   { slug: "serie-a", label: "Serie A", shortLabel: "Serie A", league: "Serie A", description: "Milan, Inter, and Italy's modern classics." },
   { slug: "bundesliga", label: "Bundesliga", shortLabel: "Bundesliga", league: "Bundesliga", description: "Germany's leading clubs and newest kits." },
   { slug: "ligue-1", label: "Ligue 1", shortLabel: "Ligue 1", league: "Ligue 1", description: "France's standout teams and current drops." },
+  { slug: "global-clubs", label: "Global Clubs", shortLabel: "Global Clubs", league: "Global Clubs", description: "Icons from South America, Europe, and beyond." },
 ] as const;
 
 export type CollectionSlug = (typeof collectionDefinitions)[number]["slug"];

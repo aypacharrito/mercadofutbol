@@ -15,6 +15,7 @@ export type Product = {
   club: string;
   name: string;
   league: string;
+  brand: string;
   price: number;
   compareAtPrice?: number;
   categories: CategorySlug[];
@@ -38,20 +39,31 @@ export const RETRO_PRICE = 45;
 const clubPrice = FAN_PRICE;
 const nationalPrice = FAN_PRICE;
 
-type Listing = Omit<Product, "id" | "slug" | "name" | "sizes" | "categories" | "price" | "description" | "season"> & {
+type Listing = Omit<Product, "id" | "slug" | "name" | "sizes" | "categories" | "price" | "description" | "season" | "brand"> & {
   id: string;
   kit: "Home" | "Away" | "Third";
   kind: "club" | "national";
   season?: string;
   featured?: boolean;
+  brand?: string;
 };
 
-function listing({ id, club, kit, league, badge, tone, accent, image, playerImage, kind, season, featured }: Listing): Product {
+const brandByClub: Record<string, string> = {
+  Mexico: "adidas", USA: "Nike", Argentina: "adidas", Brazil: "Nike", Spain: "adidas", England: "Nike",
+  France: "Nike", Germany: "adidas", Portugal: "PUMA", Netherlands: "Nike", "Real Madrid": "adidas",
+  "FC Barcelona": "Nike", Arsenal: "adidas", "Manchester City": "PUMA", "Manchester United": "adidas",
+  Chelsea: "Nike", "Paris Saint-Germain": "Nike", "Bayern Munich": "adidas", "Borussia Dortmund": "PUMA",
+  "AC Milan": "PUMA", "Inter Milan": "Nike", "Club América": "adidas", Chivas: "PUMA", "Inter Miami": "adidas",
+  "LA Galaxy": "adidas", LAFC: "adidas",
+};
+
+function listing({ id, club, kit, league, badge, tone, accent, image, playerImage, kind, season, featured, brand }: Listing): Product {
   const isNational = kind === "national";
   return {
     id: `mf-${id}`,
     slug: `${id}-jersey`,
     club,
+    brand: brand ?? brandByClub[club] ?? "Teamwear",
     name: `${club} ${kit}`,
     league,
     price: isNational ? nationalPrice : clubPrice,
@@ -67,6 +79,84 @@ function listing({ id, club, kit, league, badge, tone, accent, image, playerImag
     season: season ?? (isNational ? "2026" : "2026/27"),
     featured,
   };
+}
+
+type ExpandedFamily = {
+  club: string;
+  league: string;
+  badge: string;
+  brand: string;
+  kind: "club" | "national";
+  tone: string;
+  accent: string;
+};
+
+const expandedFamilies: readonly ExpandedFamily[] = [
+  { club: "Italy", league: "National Teams", badge: "ITA", brand: "adidas", kind: "national", tone: "#1769a4", accent: "#ffffff" },
+  { club: "Japan", league: "National Teams", badge: "JPN", brand: "adidas", kind: "national", tone: "#17408b", accent: "#e13a3e" },
+  { club: "Colombia", league: "National Teams", badge: "COL", brand: "adidas", kind: "national", tone: "#f3cf3b", accent: "#123d82" },
+  { club: "Belgium", league: "National Teams", badge: "BEL", brand: "adidas", kind: "national", tone: "#b11f2e", accent: "#f3c63f" },
+  { club: "Uruguay", league: "National Teams", badge: "URU", brand: "Nike", kind: "national", tone: "#78c4e5", accent: "#111111" },
+  { club: "Nigeria", league: "National Teams", badge: "NGA", brand: "Nike", kind: "national", tone: "#16835f", accent: "#ffffff" },
+  { club: "Croatia", league: "National Teams", badge: "CRO", brand: "Nike", kind: "national", tone: "#ffffff", accent: "#d22b36" },
+  { club: "South Korea", league: "National Teams", badge: "KOR", brand: "Nike", kind: "national", tone: "#e94555", accent: "#1a2c63" },
+  { club: "Canada", league: "National Teams", badge: "CAN", brand: "Nike", kind: "national", tone: "#cf1f2c", accent: "#ffffff" },
+  { club: "Morocco", league: "National Teams", badge: "MAR", brand: "PUMA", kind: "national", tone: "#b2182b", accent: "#17804d" },
+  { club: "Senegal", league: "National Teams", badge: "SEN", brand: "PUMA", kind: "national", tone: "#ffffff", accent: "#17804d" },
+  { club: "Switzerland", league: "National Teams", badge: "SUI", brand: "PUMA", kind: "national", tone: "#d32632", accent: "#ffffff" },
+  { club: "Austria", league: "National Teams", badge: "AUT", brand: "PUMA", kind: "national", tone: "#d5252f", accent: "#ffffff" },
+  { club: "South Africa", league: "National Teams", badge: "RSA", brand: "adidas", kind: "national", tone: "#e7b91c", accent: "#16804d" },
+  { club: "Liverpool", league: "Premier League", badge: "LFC", brand: "adidas", kind: "club", tone: "#8b1b2b", accent: "#ffffff" },
+  { club: "Tottenham", league: "Premier League", badge: "THFC", brand: "Nike", kind: "club", tone: "#f4f4f0", accent: "#172a52" },
+  { club: "Newcastle United", league: "Premier League", badge: "NUFC", brand: "adidas", kind: "club", tone: "#111111", accent: "#ffffff" },
+  { club: "Aston Villa", league: "Premier League", badge: "AVFC", brand: "adidas", kind: "club", tone: "#7b1736", accent: "#78b9dc" },
+  { club: "Atletico Madrid", league: "La Liga", badge: "ATM", brand: "Nike", kind: "club", tone: "#c71d2f", accent: "#ffffff" },
+  { club: "Girona", league: "La Liga", badge: "GIR", brand: "PUMA", kind: "club", tone: "#d9212e", accent: "#ffffff" },
+  { club: "Juventus", league: "Serie A", badge: "JUV", brand: "adidas", kind: "club", tone: "#f3f3ef", accent: "#e998ad" },
+  { club: "Roma", league: "Serie A", badge: "ROM", brand: "adidas", kind: "club", tone: "#8c162a", accent: "#e3a42d" },
+  { club: "RB Leipzig", league: "Bundesliga", badge: "RBL", brand: "PUMA", kind: "club", tone: "#f4f4f1", accent: "#d6253f" },
+  { club: "Bayer Leverkusen", league: "Bundesliga", badge: "B04", brand: "New Balance", kind: "club", tone: "#cf172c", accent: "#111111" },
+  { club: "Marseille", league: "Ligue 1", badge: "OM", brand: "PUMA", kind: "club", tone: "#f3f3ef", accent: "#49a9d8" },
+  { club: "Lyon", league: "Ligue 1", badge: "OL", brand: "adidas", kind: "club", tone: "#f3f3ef", accent: "#234a9a" },
+  { club: "Tigres", league: "Liga MX", badge: "TIG", brand: "adidas", kind: "club", tone: "#f2cc2f", accent: "#1a3c7c" },
+  { club: "Pumas UNAM", league: "Liga MX", badge: "PUM", brand: "PUMA", kind: "club", tone: "#f1eee1", accent: "#b69a51" },
+  { club: "Monterrey", league: "Liga MX", badge: "MTY", brand: "PUMA", kind: "club", tone: "#17396f", accent: "#ffffff" },
+  { club: "Cruz Azul", league: "Liga MX", badge: "CAZ", brand: "Pirma", kind: "club", tone: "#1960a8", accent: "#ffffff" },
+  { club: "Toluca", league: "Liga MX", badge: "TOL", brand: "New Balance", kind: "club", tone: "#c91d32", accent: "#ffffff" },
+  { club: "Atlanta United", league: "MLS", badge: "ATL", brand: "adidas", kind: "club", tone: "#151515", accent: "#c49b50" },
+  { club: "New York City FC", league: "MLS", badge: "NYC", brand: "adidas", kind: "club", tone: "#72bde3", accent: "#ffffff" },
+  { club: "San Diego FC", league: "MLS", badge: "SDFC", brand: "adidas", kind: "club", tone: "#1c5a55", accent: "#72d8ce" },
+  { club: "Austin FC", league: "MLS", badge: "ATX", brand: "adidas", kind: "club", tone: "#151515", accent: "#69be28" },
+  { club: "Seattle Sounders", league: "MLS", badge: "SEA", brand: "adidas", kind: "club", tone: "#1b4e85", accent: "#78be20" },
+  { club: "Ajax", league: "Global Clubs", badge: "AJX", brand: "adidas", kind: "club", tone: "#ffffff", accent: "#d7222f" },
+  { club: "Benfica", league: "Global Clubs", badge: "SLB", brand: "adidas", kind: "club", tone: "#cf1f2b", accent: "#ffffff" },
+  { club: "Boca Juniors", league: "Global Clubs", badge: "BOC", brand: "adidas", kind: "club", tone: "#173d85", accent: "#f0cc2f" },
+  { club: "River Plate", league: "Global Clubs", badge: "RIV", brand: "adidas", kind: "club", tone: "#ffffff", accent: "#d5212e" },
+  { club: "Flamengo", league: "Global Clubs", badge: "FLA", brand: "adidas", kind: "club", tone: "#b5172d", accent: "#111111" },
+  { club: "Palmeiras", league: "Global Clubs", badge: "PAL", brand: "PUMA", kind: "club", tone: "#176b45", accent: "#ffffff" },
+  { club: "Corinthians", league: "Global Clubs", badge: "COR", brand: "Nike", kind: "club", tone: "#f2f2ef", accent: "#111111" },
+  { club: "Al Hilal", league: "Global Clubs", badge: "HIL", brand: "PUMA", kind: "club", tone: "#1752a4", accent: "#ffffff" },
+];
+
+function catalogSlug(value: string) {
+  return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+}
+
+function expandFamily(family: ExpandedFamily): Product[] {
+  const year = family.kind === "national" ? "2026" : "2027";
+  const base = catalogSlug(family.club);
+  return (["Home", "Away"] as const).map((kit) => listing({
+    id: `${base}-${kit.toLowerCase()}-${year}`,
+    club: family.club,
+    kit,
+    league: family.league,
+    badge: family.badge,
+    brand: family.brand,
+    tone: kit === "Home" ? family.tone : family.accent,
+    accent: kit === "Home" ? family.accent : family.tone,
+    image: `/products-catalog/${base}-${kit.toLowerCase()}-2027.webp`,
+    kind: family.kind,
+  }));
 }
 
 export const products: Product[] = [
@@ -87,8 +177,8 @@ export const products: Product[] = [
   listing({ id: "france-away-2026", club: "France", kit: "Away", league: "National Teams", badge: "FRA", tone: "#f4f4f4", accent: "#183b79", image: "/products/yupoo-2e132f58.webp", kind: "national" }),
   listing({ id: "germany-home-2026", club: "Germany", kit: "Home", league: "National Teams", badge: "GER", tone: "#f1f1ee", accent: "#1d1d1d", image: "/products/yupoo-1749f9df.webp", kind: "national" }),
   listing({ id: "germany-away-2026", club: "Germany", kit: "Away", league: "National Teams", badge: "GER", tone: "#263526", accent: "#f1f1ee", image: "/products/yupoo-955b15a4.webp", kind: "national" }),
-  listing({ id: "portugal-home-2026", club: "Portugal", kit: "Home", league: "National Teams", badge: "POR", tone: "#b7192c", accent: "#166b45", image: "/products/yupoo-5aaecceaed.webp", kind: "national" }),
-  listing({ id: "portugal-away-2026", club: "Portugal", kit: "Away", league: "National Teams", badge: "POR", tone: "#f2efe4", accent: "#b7192c", image: "/products/yupoo-594f0162.webp", kind: "national" }),
+  listing({ id: "portugal-home-2026", club: "Portugal", kit: "Home", league: "National Teams", badge: "POR", tone: "#b7192c", accent: "#166b45", image: "/products-catalog/portugal-home-2027.webp", kind: "national" }),
+  listing({ id: "portugal-away-2026", club: "Portugal", kit: "Away", league: "National Teams", badge: "POR", tone: "#f2efe4", accent: "#b7192c", image: "/products-catalog/portugal-away-2027.webp", kind: "national" }),
   listing({ id: "netherlands-home-2026", club: "Netherlands", kit: "Home", league: "National Teams", badge: "NED", tone: "#ef7622", accent: "#1d1d1d", image: "/products/yupoo-0a2d2057.webp", kind: "national" }),
   listing({ id: "netherlands-away-2026", club: "Netherlands", kit: "Away", league: "National Teams", badge: "NED", tone: "#173a78", accent: "#ef7622", image: "/products/yupoo-947e0f22.webp", kind: "national" }),
 
@@ -126,6 +216,7 @@ export const products: Product[] = [
   listing({ id: "la-galaxy-away-2027", club: "LA Galaxy", kit: "Away", league: "MLS", badge: "LAG", tone: "#41206d", accent: "#f4b246", image: "/products-studio/la-galaxy-away-2027.webp", kind: "club" }),
   listing({ id: "lafc-home-2027", club: "LAFC", kit: "Home", league: "MLS", badge: "LAFC", tone: "#151515", accent: "#c8a95c", image: "/products/yupoo-9e271046.webp", kind: "club" }),
   listing({ id: "lafc-away-2027", club: "LAFC", kit: "Away", league: "MLS", badge: "LAFC", tone: "#f4f1e8", accent: "#c8a95c", image: "/products-studio/lafc-away-2027.webp", kind: "club" }),
+  ...expandedFamilies.flatMap(expandFamily),
 ];
 
 export const productMap = new Map(products.map((product) => [product.id, product]));

@@ -9,7 +9,7 @@ export function HomeHero() {
       <div className="hero-copy">
         <p className="eyebrow">WORLD CUP 2026</p>
         <h1>Wear the<br />beautiful game.</h1>
-        <p>Start with the World Cup collection, then browse Liga MX, La Liga, Premier League, MLS, and more.</p>
+        <p>World Cup 2026 and the newest club releases — 70 teams with Home and Away kits grouped in one clean product view.</p>
         <div className="hero-actions"><Link className="button-primary" href="/collections/world-cup">Shop World Cup 2026</Link><Link className="button-secondary" href="#discover">Browse competitions</Link></div>
       </div>
       <Link className="hero-product" href={`/products/${heroProduct.slug}`}>

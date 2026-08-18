@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { categoryDefinitions } from "@/lib/catalog";
+import { collectionDefinitions } from "@/lib/collections";
 import { useCart } from "@/components/cart-provider";
 
 export function SiteHeader() {
@@ -35,12 +35,12 @@ export function SiteHeader() {
         </div>
       </header>
       <nav className={`main-nav ${menuOpen ? "open" : ""}`} aria-label="Main navigation">
-        {categoryDefinitions.map((category) => {
-          const href = `/category/${category.slug}`;
-          return <Link className={pathname === href ? "active" : ""} href={href} key={category.slug} onClick={() => setMenuOpen(false)}>{category.shortLabel}</Link>;
+        <Link className={pathname === "/category/clubs" ? "active" : ""} href="/category/clubs" onClick={() => setMenuOpen(false)}>All Jerseys</Link>
+        {collectionDefinitions.map((collection) => {
+          const href = `/collections/${collection.slug}`;
+          return <Link className={pathname === href ? "active" : ""} href={href} key={collection.slug} onClick={() => setMenuOpen(false)}>{collection.shortLabel}</Link>;
         })}
       </nav>
     </>
   );
 }
-

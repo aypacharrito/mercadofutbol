@@ -11,8 +11,11 @@ test("catalog contains every customer-facing department", () => {
 });
 
 test("catalog includes a complete launch assortment", () => {
-  const productIds = source.match(/listing\(\{ id:/g) ?? [];
-  assert.equal(productIds.length, 53);
+  const originalVariants = source.match(/listing\(\{ id:/g) ?? [];
+  const expandedFamilies = source.match(/^\s+\{ club: .* kind: /gm) ?? [];
+  assert.equal(originalVariants.length, 53);
+  assert.equal(expandedFamilies.length, 44);
+  assert.match(source, /\.\.\.expandedFamilies\.flatMap\(expandFamily\)/);
 });
 
 test("jersey images are local assets", () => {
@@ -31,6 +34,11 @@ test("club and country kit posts are grouped into selectable families", () => {
   assert.match(source, /export const catalogProducts/);
   assert.match(source, /getProductVariants/);
   assert.match(source, /kit: \"Home\" \| \"Away\" \| \"Third\"/);
+});
+
+test("catalog supports manufacturer browsing", () => {
+  assert.match(source, /brand: string/);
+  for (const brand of ["adidas", "Nike", "PUMA"]) assert.match(source, new RegExp(`brand: "${brand}"`));
 });
 
 test("featured teams expose both Home and Away choices", () => {

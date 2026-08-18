@@ -7,7 +7,7 @@ export default function HomePage() {
     <main>
       <HomeHero />
       <section className="benefit-strip">
-        <div><b>Fan + Player</b><span>Choose your preferred fit</span></div>
+        <div><b>70 team collections</b><span>Home + Away in one place</span></div>
         <div><b>Make it yours</b><span>Optional name and number</span></div>
         <div><b>Track every order</b><span>Simple customer account</span></div>
         <div><b>Secure payment</b><span>Protected by Stripe</span></div>
@@ -15,7 +15,7 @@ export default function HomePage() {
 
       <section className="category-rail section-shell" id="discover">
         <div className="section-title">
-          <div><p className="eyebrow">DISCOVER</p><h2>Shop by competition.</h2></div>
+          <div><p className="eyebrow">DISCOVER</p><h2>Choose your competition.</h2></div>
           <Link href="/collections/world-cup">Start with World Cup 2026 →</Link>
         </div>
         <div className="category-cards">

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { ProductCard } from "@/components/product-card";
+import { CatalogBrowser } from "@/components/catalog-browser";
 import { getCollection, productsForCollection } from "@/lib/collections";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -29,10 +29,7 @@ export default async function CollectionPage({ params }: Props) {
         <p>{collection.description} · Fan and Player options · Optional personalization</p>
       </section>
       <section className="section-shell">
-        <div className="listing-tools"><span>{collectionProducts.length} products</span><span>2026/27 releases first</span></div>
-        <div className="product-grid">
-          {collectionProducts.map((product, index) => <ProductCard product={product} priority={index < 3} key={product.id} />)}
-        </div>
+        <CatalogBrowser products={collectionProducts} />
       </section>
     </main>
   );

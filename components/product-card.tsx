@@ -11,7 +11,7 @@ export function ProductCard({ product, priority = false }: { product: Product; p
         <div className="product-tag">{isSale ? "SALE" : product.categories.includes("new") ? "NEW" : product.season}</div>
         <ProductVisual product={product} priority={priority} />
         <div className="product-card-copy">
-          <p>{product.league}</p>
+          <p>{product.brand} · {product.league}</p>
           <h3>{product.club} Jerseys</h3>
           <span>{product.season} · Choose kit + fit</span>
           <div className="card-kit-options" aria-label="Available kits">

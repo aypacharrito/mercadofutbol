@@ -59,6 +59,8 @@ const brandByClub: Record<string, string> = {
 
 function listing({ id, club, kit, league, badge, tone, accent, image, playerImage, kind, season, featured, brand }: Listing): Product {
   const isNational = kind === "national";
+  const imageFile = image?.split("/").at(-1);
+  const playerCatalogImage = imageFile ? `/products-player/${imageFile}` : playerImage;
   return {
     id: `mf-${id}`,
     slug: `${id}-jersey`,
@@ -74,7 +76,7 @@ function listing({ id, club, kit, league, badge, tone, accent, image, playerImag
     accent,
     kit,
     image,
-    playerImage,
+    playerImage: playerCatalogImage,
     description: `${club} ${kit.toLowerCase()} jersey in Fan and Player versions, with optional name and number personalization.`,
     season: season ?? (isNational ? "2026" : "2026/27"),
     featured,
